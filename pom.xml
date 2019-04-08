@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>aatt_test_framework</groupId>
+    <artifactId>aatt_test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <aspectj.version>1.9.2</aspectj.version>
+        <allure.maven-plugin.version>2.10.0</allure.maven-plugin.version>
+        <allure.version>2.10.0</allure.version>
+
+        <maven.site-plugin.version>3.7.1</maven.site-plugin.version>
+        <maven.clean-plugin.verions>3.1.0</maven.clean-plugin.verions>
+        <surefire.version>2.22.1</surefire.version>
+
+        <compiler.version>3.8.0</compiler.version>
+        <java.version>12</java.version>
+
+        <log4j.version>1.2.17</log4j.version>
+        <slf4j-log4j12.version>1.7.1</slf4j-log4j12.version>
+        <slf4j-api.version>1.7.1</slf4j-api.version>
+
+        <lombok.version>1.18.4</lombok.version>
+        <jackson-databind>2.9.8</jackson-databind>
+        <rest-assured>3.2.0</rest-assured>
+        <testng.version>6.14.3</testng.version>
+        <assertj>3.11.1</assertj>
+
+        <surefire.argline>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+        </surefire.argline>
+        <surefire.suiteXmlFiles>
+            src${file.separator}test${file.separator}resources${file.separator}suites${file.separator}${suite}.xml
+        </surefire.suiteXmlFiles>
+        <surefire.useDefaultListeners>false</surefire.useDefaultListeners>
+
+        <suite>smoke</suite>
+    </properties>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${surefire.argline}</argLine>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${surefire.suiteXmlFiles}</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <properties>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>${surefire.useDefaultListeners}</value>
+                        </property>
+                    </properties>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}${file.separator}allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}${file.separator}allure-report</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+                <version>${maven.clean-plugin.verions}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.version}</version>
+                <configuration>
+                    <!--in case of java 12-->
+                    <!--<release>${java.version}</release>-->
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure.maven-plugin.version}</version>
+                <configuration>
+                    <reportDirectory>${project.basedir}${file.separator}allure-report</reportDirectory>
+                    <reportVersion>${allure.version}</reportVersion>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+
+        <!--added because of bug in case of Allure report with java 12-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j-log4j12.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
